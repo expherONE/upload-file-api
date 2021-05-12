@@ -1,4 +1,4 @@
-package com.file.upload;
+package com.file.upload.testNewMethods;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;

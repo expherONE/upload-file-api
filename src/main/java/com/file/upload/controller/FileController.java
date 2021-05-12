@@ -36,11 +36,17 @@ public class FileController {
     ResponseEntity<Resource> downloadSingleFile(@PathVariable String fileName){
         Resource resource = StorageService.downloadFile(fileName);
 
+        //la imagen se puede cambiar por PDF
+        //aplicacion XML PDF
+        //MediaType.IMAGE_JPEG; gif PNG
         MediaType contentType = MediaType.IMAGE_JPEG;
 
         return ResponseEntity.ok()
                 .contentType(contentType)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachement;fileName"
+                //este lo mantiene en linea para poder visualisarlo
+                //.header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName"
+                        //este solo descarga directo el archivo
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachement;fileName"
                         +resource.getFilename())
                 .body(resource);
     }
