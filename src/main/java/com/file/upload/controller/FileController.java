@@ -39,7 +39,7 @@ public class FileController {
         //la imagen se puede cambiar por PDF
         //aplicacion XML PDF
         //MediaType.IMAGE_JPEG; gif PNG
-        MediaType contentType = MediaType.IMAGE_JPEG;
+        MediaType contentType = MediaType.APPLICATION_XML;
 
         return ResponseEntity.ok()
                 .contentType(contentType)

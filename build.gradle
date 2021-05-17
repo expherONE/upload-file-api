@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.file'
-version = '0.0.1-SNAPSHOT'
+version = 'upload-download-files'
 sourceCompatibility = '11'
 
 repositories {
