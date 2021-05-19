@@ -32,8 +32,8 @@ public class FileController {
         SystemResponse response = new SystemResponse(filename, contenType, url);
         return response;
     }
-    @GetMapping("/download/{fileName}")
-    ResponseEntity<Resource> downloadSingleFile(@PathVariable String fileName){
+    @GetMapping("/download/xml/{fileName}")
+    ResponseEntity<Resource> viewXml(@PathVariable String fileName){
         Resource resource = StorageService.downloadFile(fileName);
 
         //la imagen se puede cambiar por PDF
@@ -44,9 +44,27 @@ public class FileController {
         return ResponseEntity.ok()
                 .contentType(contentType)
                 //este lo mantiene en linea para poder visualisarlo
-                //.header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName"
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName"
                         //este solo descarga directo el archivo
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachement;fileName"
+                        //.header(HttpHeaders.CONTENT_DISPOSITION, "attachement;fileName"
+                        +resource.getFilename())
+                .body(resource);
+    }
+    @GetMapping("/download/pdf/{fileName}")
+    ResponseEntity<Resource> viewPdf(@PathVariable String fileName){
+        Resource resource = StorageService.downloadFile(fileName);
+
+        //la imagen se puede cambiar por PDF
+        //aplicacion XML PDF
+        //MediaType.IMAGE_JPEG; gif PNG
+        MediaType contentType = MediaType.APPLICATION_PDF;
+
+        return ResponseEntity.ok()
+                .contentType(contentType)
+                //este lo mantiene en linea para poder visualisarlo
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName"
+                //este solo descarga directo el archivo
+                //.header(HttpHeaders.CONTENT_DISPOSITION, "attachement;fileName"
                         +resource.getFilename())
                 .body(resource);
     }

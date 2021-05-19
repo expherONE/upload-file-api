@@ -35,7 +35,7 @@ public class StorageService {
         try {
             Files.copy(file.getInputStream(),filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException("si jalo este pedo", e);
+            throw new RuntimeException("Todo en orden", e);
         }
         return fileName;
     }
