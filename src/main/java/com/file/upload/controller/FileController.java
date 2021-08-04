@@ -24,7 +24,7 @@ public class FileController {
 
         //http://localhost:8080/download/abc.jpg
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/")
+                .path("/download/pdf/")
                 .path(filename)
                 .toUriString();
         String contenType = file.getContentType();

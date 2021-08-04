@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -31,23 +32,27 @@ public class StorageService {
 
     public String guardar(MultipartFile file){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        Path filePath = Paths.get(fileStoragePath+"/"+fileName);
+        File directorios = new File("/home/public/"+fileName);
+        directorios.mkdir();
+        Path filePath = Paths.get(fileStoragePath+"/"+fileName+"/"+fileName);
         try {
             Files.copy(file.getInputStream(),filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException("Todo en orden", e);
+            throw new RuntimeException(e);
         }
         return fileName;
     }
     
 
     public static Resource downloadFile(String fileName){
-       Path path = Paths.get(fileStorageLocation).toAbsolutePath().resolve(fileName);
+        //ruta absoluta
+       //Path path = Paths.get(fileStorageLocation).toAbsolutePath().resolve(fileName);
+        Path path = Paths.get(fileStorageLocation+"/"+fileName).toAbsolutePath().resolve(fileName);
        Resource resource;
         try {
             resource = new UrlResource(path.toUri());
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Jalando Leyendo archivo", e);
+            throw new RuntimeException(e);
         }
         if (resource.exists() && resource.isReadable()){
             return resource;
