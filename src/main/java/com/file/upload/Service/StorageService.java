@@ -30,11 +30,10 @@ public class StorageService {
 
 
 
-    public String guardar(MultipartFile file){
+    public String guardar(MultipartFile file, String noPersonal){
+        this.makeDir(noPersonal);
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        File directorios = new File("/home/public/"+fileName);
-        directorios.mkdir();
-        Path filePath = Paths.get(fileStoragePath+"/"+fileName+"/"+fileName);
+        Path filePath = Paths.get(fileStoragePath+"/"+noPersonal+"/"+fileName);
         try {
             Files.copy(file.getInputStream(),filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -42,12 +41,22 @@ public class StorageService {
         }
         return fileName;
     }
+
+    public String makeDir(String noPersonal){
+        File directorios = new File("/home/public/"+noPersonal);
+        if (directorios.exists())
+            System.out.println("El directorio ya existe");
+        else{
+            directorios.mkdir();
+            System.out.println("Se creó la carpeta");}
+        return noPersonal;
+    }
     
 
-    public static Resource downloadFile(String fileName){
+    public static Resource downloadFile(String fileName, String noPersonal){
         //ruta absoluta
        //Path path = Paths.get(fileStorageLocation).toAbsolutePath().resolve(fileName);
-        Path path = Paths.get(fileStorageLocation+"/"+fileName).toAbsolutePath().resolve(fileName);
+        Path path = Paths.get(fileStorageLocation+"/"+noPersonal+"/").toAbsolutePath().resolve(fileName);
        Resource resource;
         try {
             resource = new UrlResource(path.toUri());
@@ -57,7 +66,18 @@ public class StorageService {
         if (resource.exists() && resource.isReadable()){
             return resource;
         }else {
-            throw new RuntimeException("no se pudo leer este pedo");
+            throw new RuntimeException("No se encontro el archivo");
         }
+    }
+
+    public String saveDocuments(MultipartFile file, String noPersonal){
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        Path filePath = Paths.get(fileStoragePath+"/"+noPersonal+"/"+fileName);
+        try {
+            Files.copy(file.getInputStream(),filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return fileName;
     }
 }

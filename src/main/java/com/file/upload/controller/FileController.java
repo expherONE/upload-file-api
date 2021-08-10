@@ -4,6 +4,7 @@ import com.file.upload.Service.StorageService;
 import com.file.upload.dto.SystemResponse;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,9 @@ public class FileController {
         this.storageService = storageService;
     }
 
-    @PostMapping("/single/upload")
-    SystemResponse singleUpload (@RequestParam("file") MultipartFile file){
-        String filename = storageService.guardar(file);
+    @PostMapping("/documents/{noPersonal}")
+    SystemResponse singleUpload (@RequestParam("file") MultipartFile file, @PathVariable String noPersonal){
+        String filename = storageService.guardar(file, noPersonal);
 
         //http://localhost:8080/download/abc.jpg
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -32,27 +33,9 @@ public class FileController {
         SystemResponse response = new SystemResponse(filename, contenType, url);
         return response;
     }
-    @GetMapping("/download/xml/{fileName}")
-    ResponseEntity<Resource> viewXml(@PathVariable String fileName){
-        Resource resource = StorageService.downloadFile(fileName);
-
-        //la imagen se puede cambiar por PDF
-        //aplicacion XML PDF
-        //MediaType.IMAGE_JPEG; gif PNG
-        MediaType contentType = MediaType.APPLICATION_XML;
-
-        return ResponseEntity.ok()
-                .contentType(contentType)
-                //este lo mantiene en linea para poder visualisarlo
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName"
-                        //este solo descarga directo el archivo
-                        //.header(HttpHeaders.CONTENT_DISPOSITION, "attachement;fileName"
-                        +resource.getFilename())
-                .body(resource);
-    }
-    @GetMapping("/download/pdf/{fileName}")
-    ResponseEntity<Resource> viewPdf(@PathVariable String fileName){
-        Resource resource = StorageService.downloadFile(fileName);
+    @GetMapping("/download/{noPersonal}/{fileName}")
+    ResponseEntity<Resource> viewPdf(@PathVariable String fileName, @PathVariable String noPersonal){
+        Resource resource = StorageService.downloadFile(fileName, noPersonal);
 
         //la imagen se puede cambiar por PDF
         //aplicacion XML PDF
@@ -67,5 +50,25 @@ public class FileController {
                 //.header(HttpHeaders.CONTENT_DISPOSITION, "attachement;fileName"
                         +resource.getFilename())
                 .body(resource);
+    }
+    @PostMapping("/files/{noPersonal}")
+    ResponseEntity makeDir (@PathVariable String noPersonal){
+     storageService.makeDir(noPersonal);
+     return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/files2/{noPersonal}")
+    SystemResponse saveDocuments (@RequestParam("file") MultipartFile file, @PathVariable String noPersonal){
+        String filename = storageService.saveDocuments(file, noPersonal);
+
+        //http://localhost:8080/download/abc.jpg
+        String url = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/download/pdf/")
+                .path(filename)
+                .toUriString();
+        String contenType = file.getContentType();
+
+        SystemResponse response = new SystemResponse(filename, contenType, url);
+        return response;
     }
 }
