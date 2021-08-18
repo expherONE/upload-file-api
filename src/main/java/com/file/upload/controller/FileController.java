@@ -59,7 +59,7 @@ public class FileController {
 
     @PostMapping("/files/{noPersonal}")
     SystemResponse saveDocuments (@RequestParam("file") MultipartFile file, @PathVariable String noPersonal){
-        String filename = storageService.saveDocuments(file, noPersonal);
+        String filename = storageService.guardar(file, noPersonal);
 
         //http://localhost:8080/download/abc.jpg
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
