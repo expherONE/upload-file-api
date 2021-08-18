@@ -51,13 +51,13 @@ public class FileController {
                         +resource.getFilename())
                 .body(resource);
     }
-    @PostMapping("/files/{noPersonal}")
+    @PostMapping("/dir/{noPersonal}")
     ResponseEntity makeDir (@PathVariable String noPersonal){
      storageService.makeDir(noPersonal);
      return new ResponseEntity(HttpStatus.OK);
     }
 
-    @PostMapping("/files2/{noPersonal}")
+    @PostMapping("/files/{noPersonal}")
     SystemResponse saveDocuments (@RequestParam("file") MultipartFile file, @PathVariable String noPersonal){
         String filename = storageService.saveDocuments(file, noPersonal);
 
