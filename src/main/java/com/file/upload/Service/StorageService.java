@@ -70,14 +70,4 @@ public class StorageService {
         }
     }
 
-    public String saveDocuments(MultipartFile file, String noPersonal){
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        Path filePath = Paths.get(fileStoragePath+"/"+noPersonal+"/"+fileName);
-        try {
-            Files.copy(file.getInputStream(),filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return fileName;
-    }
 }

@@ -19,20 +19,6 @@ public class FileController {
         this.storageService = storageService;
     }
 
-    @PostMapping("/documents/{noPersonal}")
-    SystemResponse singleUpload (@RequestParam("file") MultipartFile file, @PathVariable String noPersonal){
-        String filename = storageService.guardar(file, noPersonal);
-
-        //http://localhost:8080/download/abc.jpg
-        String url = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/pdf/")
-                .path(filename)
-                .toUriString();
-        String contenType = file.getContentType();
-
-        SystemResponse response = new SystemResponse(filename, contenType, url);
-        return response;
-    }
     @GetMapping("/download/{noPersonal}/{fileName}")
     ResponseEntity<Resource> viewPdf(@PathVariable String fileName, @PathVariable String noPersonal){
         Resource resource = StorageService.downloadFile(fileName, noPersonal);
@@ -63,7 +49,7 @@ public class FileController {
 
         //http://localhost:8080/download/abc.jpg
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/pdf/")
+                .path("/download/"+noPersonal+"/")
                 .path(filename)
                 .toUriString();
         String contenType = file.getContentType();
